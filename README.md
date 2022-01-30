@@ -1,20 +1,16 @@
 # contracts
 OmniDex Contracts
 
-
-
-
-
 Sensei.sol :
 
-Background
+Background:
 The Pancakeswap smart contracts were adapted to create the OmniDex DeFi platform. These
 contracts include a migration capability which was also inherited by the Omnidex ZenMaster
 contract. This migration functionality has the undesirable consequence of potentially allowing a
 malicious contract owner to take control of all investments on the platform. In order to reinforce
 trust and confidence in the platform the developers wish to permanently remove this capability.
 
-Approach
+Approach:
 The direct removal of the migrator code from the already deployed ZenMaster contract was deemed
 to be complex, risky and could lead to a very poor user experience. The proposed approach is
 therefore to permanently disable this code by making it inaccessible to all users, devs and owners.
@@ -22,7 +18,7 @@ Critically, the migration functionality within the ZenMaster contract is only ac
 of the contract through the ‘onlyOwner’ parameter. This attribute of the contract will be used to
 permanently disable the vulnerability.
 
-Solution
+Solution:
 In order to overcome the challenge, a new proxy router contract, Sensei.sol, will be created and this
 contract will become the new owner of the ZenMaster contract. The purpose of Sensei will be to
 route all ‘ownerOnly’ calls to the ZenMaster and, as the owner of the ZenMaster, Sensei will be the
@@ -40,7 +36,7 @@ OnlyOwner Functions Relayed by Sensei
 • add - adds a new LP token
 • Set - Updates the pool allocation points
 
-Conclusion
+Conclusion:
 The method outlined above describes a solution that will disable the migrator vulnerability without
 disrupting the user experience. The change will be permanent and there will be no way to reinvoke
 the excluded functions in the future. The solution has already been tested within a test environment
