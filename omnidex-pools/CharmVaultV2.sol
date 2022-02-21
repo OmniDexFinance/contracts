@@ -209,6 +209,10 @@ contract CharmVaultV2 is Ownable, Pausable {
      */
     function emergencyWithdraw() external onlyAdmin {
         IZenMaster(zenmaster).emergencyWithdraw(0);
+        
+        if(totalShares == 0) {
+            token.safeTransfer(treasury, available());
+        }
     }
 
     /**
