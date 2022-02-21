@@ -70,8 +70,6 @@ contract CharmVaultV2 is Ownable, Pausable {
 
         // Infinite approve
         IERC20(_token).safeApprove(address(_zenmaster), uint256(-1));
-        
-        isAuthorized[msg.sender] = true;
     }
 
     /**
