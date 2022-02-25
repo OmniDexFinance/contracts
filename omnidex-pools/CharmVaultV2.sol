@@ -30,14 +30,17 @@ contract CharmVaultV2 is Ownable, Pausable {
     uint256 public lastHarvestedTime;
     address public admin;
     address public treasury;
+    address public furnance;
 
-    uint256 public constant MAX_PERFORMANCE_FEE = 500; // 5%
-    uint256 public constant MAX_CALL_FEE = 100; // 1%
-    uint256 public constant MAX_WITHDRAW_FEE = 100; // 1%
-    uint256 public constant MAX_WITHDRAW_FEE_PERIOD = 72 hours; // 3 days
+    uint256 public constant MAX_PERFORMANCE_FEE = 2500; // 25%
+    uint256 public constant MAX_CALL_FEE = 2500; // 25%
+    uint256 public constant MAX_BURN_FEE = 2500; // 25%
+    uint256 public constant MAX_WITHDRAW_FEE = 2500; // 25%
+    uint256 public constant MAX_WITHDRAW_FEE_PERIOD = 168 hours; // 7 days
 
-    uint256 public performanceFee = 200; // 2%
-    uint256 public callFee = 25; // 0.25%
+    uint256 public performanceFee = 500; // 5%
+    uint256 public callFee = 100; // 1%
+    uint256 public burnFee = 100; // 1%
     uint256 public withdrawFee = 0; // 10 == 0.1%
     uint256 public withdrawFeePeriod = 0 hours; // 72 hours == 3 days
 
@@ -54,19 +57,22 @@ contract CharmVaultV2 is Ownable, Pausable {
      * @param _zenmaster: ZenMaster contract
      * @param _admin: address of the admin
      * @param _treasury: address of the treasury (collects fees)
+     * @param _furnance: address of the furnance (burns tokens)
      */
     constructor(
         IERC20 _token,
         IERC20 _receiptToken,
         IZenMaster _zenmaster,
         address _admin,
-        address _treasury
+        address _treasury,
+        address _furnance
     ) public {
         token = _token;
         receiptToken = _receiptToken;
         zenmaster = _zenmaster;
         admin = _admin;
         treasury = _treasury;
+        furnance = _furnance;
 
         // Infinite approve
         IERC20(_token).safeApprove(address(_zenmaster), uint256(-1));
@@ -136,6 +142,9 @@ contract CharmVaultV2 is Ownable, Pausable {
 
         uint256 currentCallFee = bal.mul(callFee).div(10000);
         token.safeTransfer(_caller, currentCallFee);
+        
+        uint256 currentBurnFee = bal.mul(burnFee).div(10000);
+        token.safeTransfer(furnance, currentBurnFee);
 
         _earn();
 
@@ -163,6 +172,15 @@ contract CharmVaultV2 is Ownable, Pausable {
     }
 
     /**
+     * @notice Sets burn address
+     * @dev Only callable by the contract owner.
+     */
+    function setFurnance(address _furnance) external onlyOwner {
+        require(_furnance != address(0), "Cannot be zero address");
+        furnance = _furnance;
+    }
+
+    /**
      * @notice Sets performance fee
      * @dev Only callable by the contract admin.
      */
@@ -178,6 +196,15 @@ contract CharmVaultV2 is Ownable, Pausable {
     function setCallFee(uint256 _callFee) external onlyAdmin {
         require(_callFee <= MAX_CALL_FEE, "callFee cannot be more than MAX_CALL_FEE");
         callFee = _callFee;
+    }
+
+    /**
+     * @notice Sets burn fee
+     * @dev Only callable by the contract admin.
+     */
+    function setBurnFee(uint256 _burnFee) external onlyAdmin {
+        require(_burnFee <= MAX_BURN_FEE, "burnFee cannot be more than MAX_BURN_FEE");
+        burnFee = _burnFee;
     }
 
     /**
