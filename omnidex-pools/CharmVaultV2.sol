@@ -30,7 +30,7 @@ contract CharmVaultV2 is Ownable, Pausable {
     uint256 public lastHarvestedTime;
     address public admin;
     address public treasury;
-    address public furnance;
+    address public furnace;
 
     uint256 public constant MAX_PERFORMANCE_FEE = 2500; // 25%
     uint256 public constant MAX_CALL_FEE = 2500; // 25%
@@ -57,7 +57,7 @@ contract CharmVaultV2 is Ownable, Pausable {
      * @param _zenmaster: ZenMaster contract
      * @param _admin: address of the admin
      * @param _treasury: address of the treasury (collects fees)
-     * @param _furnance: address of the furnance (burns tokens)
+     * @param _furnace: address of the furnace (burns tokens)
      */
     constructor(
         IERC20 _token,
@@ -65,14 +65,14 @@ contract CharmVaultV2 is Ownable, Pausable {
         IZenMaster _zenmaster,
         address _admin,
         address _treasury,
-        address _furnance
+        address _furnace
     ) public {
         token = _token;
         receiptToken = _receiptToken;
         zenmaster = _zenmaster;
         admin = _admin;
         treasury = _treasury;
-        furnance = _furnance;
+        furnace = _furnace;
 
         // Infinite approve
         IERC20(_token).safeApprove(address(_zenmaster), uint256(-1));
@@ -144,7 +144,7 @@ contract CharmVaultV2 is Ownable, Pausable {
         token.safeTransfer(_caller, currentCallFee);
         
         uint256 currentBurnFee = bal.mul(burnFee).div(10000);
-        token.safeTransfer(furnance, currentBurnFee);
+        token.safeTransfer(furnace, currentBurnFee);
 
         _earn();
 
@@ -175,9 +175,9 @@ contract CharmVaultV2 is Ownable, Pausable {
      * @notice Sets burn address
      * @dev Only callable by the contract owner.
      */
-    function setFurnance(address _furnance) external onlyOwner {
-        require(_furnance != address(0), "Cannot be zero address");
-        furnance = _furnance;
+    function setFurnace(address _furnace) external onlyOwner {
+        require(_furnace != address(0), "Cannot be zero address");
+        furnace = _furnace;
     }
 
     /**
