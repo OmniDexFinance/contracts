@@ -40,7 +40,7 @@ contract CharmVaultV2 is Ownable, Pausable {
 
     uint256 public performanceFee = 500; // 5%
     uint256 public callFee = 100; // 1%
-    uint256 public burnFee = 100; // 1%
+    uint256 public burnFee = 200; // 2%
     uint256 public withdrawFee = 0; // 10 == 0.1%
     uint256 public withdrawFeePeriod = 0 hours; // 72 hours == 3 days
 
@@ -287,6 +287,18 @@ contract CharmVaultV2 is Ownable, Pausable {
         uint256 currentCallFee = amount.mul(callFee).div(10000);
 
         return currentCallFee;
+    }
+    
+    /**
+     * @notice Calculates the expected burn amount
+     * @return Expected amount to burn in CHARM
+     */
+    function calculateHarvestBurnAmount() external view returns (uint256) {
+        uint256 amount = IZenMaster(zenmaster).pendingCharm(0, address(this));
+        amount = amount.add(available());
+        uint256 currentBurnFee = amount.mul(burnFee).div(10000);
+
+        return currentBurnFee;
     }
 
     /**
