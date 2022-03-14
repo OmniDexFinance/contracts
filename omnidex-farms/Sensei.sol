@@ -83,8 +83,8 @@ contract Sensei is Ownable {
     
     uint public constant MIN_DELEGATES = 2;
     uint public constant MAX_DELEGATES = 10;
-    uint public constant GRACE_PERIOD = 14 days;        // set to 14 days on final deployment
-    uint public constant MINIMUM_DELAY = 60 seconds;  // set to 24 hrs on final deployment
+    uint public constant GRACE_PERIOD = 14 days;      
+    uint public constant MINIMUM_DELAY = 48 hours;
     uint public constant MAXIMUM_DELAY = 30 days;  
     uint public delay = MINIMUM_DELAY;
     uint public totalDelegates;
