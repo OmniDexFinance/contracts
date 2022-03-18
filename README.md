@@ -1,27 +1,31 @@
 # contracts
-OmniDex Contracts
 
 
-Router: 0xF9678db1CE83f6f51E5df348E2Cc842Ca51EfEc1
+### Router
+0xF9678db1CE83f6f51E5df348E2Cc842Ca51EfEc1
 
-Factory: 0x7a2A35706f5d1CeE2faa8A254dd6F6D7d7Becc25
+### Factory
+0x7a2A35706f5d1CeE2faa8A254dd6F6D7d7Becc25
 
-ZenMaster: 0x79f5A8BD0d6a00A41EA62cdA426CEf0115117a61
+### ZenMaster
+0x79f5A8BD0d6a00A41EA62cdA426CEf0115117a61
 
-Charm Vault:0x1482117c5F3F6962429C40068e22Cf4120bae94b
+### Charm Vault
+0x1482117c5F3F6962429C40068e22Cf4120bae94b
 
-Charm: 0xd2504a02fABd7E546e41aD39597c377cA8B0E1Df
+### Charm
+0xd2504a02fABd7E546e41aD39597c377cA8B0E1Df
 
-xCharm: 0x65a5f4636233B7B4c4B134BA414c6EaB9fF79594
-
-
-
-
-Sensei.sol :
-
+### xCharm 0x65a5f4636233B7B4c4B134BA414c6EaB9fF79594
 
 
-Background
+
+
+## Sensei.sol 
+
+
+
+### Background
 
 The Pancakeswap smart contracts were adapted to create the OmniDex DeFi platform. These
 contracts include a migration capability which was also inherited by the Omnidex ZenMaster
@@ -29,7 +33,7 @@ contract. This migration functionality has the undesirable consequence of potent
 malicious contract owner to take control of all investments on the platform. In order to reinforce
 trust and confidence in the platform the developers wish to permanently remove this capability.
 
-Approach
+### Approach
 
 The direct removal of the migrator code from the already deployed ZenMaster contract was deemed
 to be complex, risky and could lead to a very poor user experience. The proposed approach is
@@ -38,7 +42,7 @@ Critically, the migration functionality within the ZenMaster contract is only ac
 of the contract through the ‘onlyOwner’ parameter. This attribute of the contract will be used to
 permanently disable the vulnerability.
 
-Solution
+### Solution
 
 In order to overcome the challenge, a new proxy router contract, Sensei.sol, will be created and this
 contract will become the new owner of the ZenMaster contract. The purpose of Sensei will be to
@@ -57,7 +61,7 @@ OnlyOwner Functions Relayed by Sensei
 • add - adds a new LP token
 • Set - Updates the pool allocation points
 
-Conclusion
+### Conclusion
 
 The method outlined above describes a solution that will disable the migrator vulnerability without
 disrupting the user experience. The change will be permanent and there will be no way to reinvoke

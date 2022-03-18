@@ -20,7 +20,7 @@ library OmnidexLibrary {
                 hex'ff',
                 factory,
                 keccak256(abi.encodePacked(token0, token1)),
-                hex'8ddec330f21ff34e94afd889a50171da3c349dd0da447821351951840df608b5' // init code hash
+                hex'840ca6a45470897b370d3e68dd8c3d42470f47974a933a260edf6652c3e9ba25' // init code hash
             ))));
     }
 
