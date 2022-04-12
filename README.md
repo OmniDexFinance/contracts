@@ -6,20 +6,12 @@
  | |__| | | |  | | | |\  |  _| |_  | |__| | | |____   / . \ 
   \____/  |_|  |_| |_| \_| |_____| |_____/  |______| /_/ \_\
 ```
-| Column 1 Header | Column 2 Header | 
+| Contract | Address | 
 | --------------- | --------------- | 
-| Row 1 Column 1 | Row 1 Column 2 | 
-| Row 2 Column 1 | Row 2 Column 2 | 
-| Row 3 Column 1 | Row 3 Column 2 | 
+| Router | 0xF9678db1CE83f6f51E5df348E2Cc842Ca51EfEc1 | 
+| Factory| 0x7a2A35706f5d1CeE2faa8A254dd6F6D7d7Becc25 | 
+| ZenMaster | 0x79f5A8BD0d6a00A41EA62cdA426CEf0115117a61 | 
 
-### Router
-0xF9678db1CE83f6f51E5df348E2Cc842Ca51EfEc1
-
-### Factory
-0x7a2A35706f5d1CeE2faa8A254dd6F6D7d7Becc25
-
-### ZenMaster
-0x79f5A8BD0d6a00A41EA62cdA426CEf0115117a61
 
 ### Charm Vault
 0x1482117c5F3F6962429C40068e22Cf4120bae94b
