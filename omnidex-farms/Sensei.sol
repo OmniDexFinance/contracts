@@ -23,12 +23,29 @@ contract Sensei is Ownable {
     constructor(address ZenAddress, address[] memory initialDelegates) public { 
         Zen = ZenMaster(ZenAddress);
         // @dev Initialise pre existing LP addresses on deployment
-        LpList[address(0x933F83735f26e51c61955b4fCA88F13fbd423A0C)] = true;
-        LpList[address(0xd0D08c23d0cFd88457cDD43CaF34c16E3A29e85F)] = true;
-        LpList[address(0x427E9A7bb848444a72faA3248c48F3B302429725)] = true;
-        LpList[address(0x651Fcc98a348C91FDF087903c25A638a25344dFf)] = true;
-        LpList[address(0xbB4555efb784cD30fC27531EEd82f7BC097D6206)] = true;
-        // @dev .... add all other existing LP addresses to this list prior to deployment
+        LpList[address(0x933F83735f26e51c61955b4fCA88F13fbd423A0C)] = true; // CHARM-TLOS
+        LpList[address(0xC72ca4D9Ef358E1d8989e36dF9dFA28378137D20)] = true; // KARMA-TLOS
+        LpList[address(0xd0D08c23d0cFd88457cDD43CaF34c16E3A29e85F)] = true; // TLOS-ETH
+        LpList[address(0x427E9A7bb848444a72faA3248c48F3B302429725)] = true; // wBTC-TLOS
+        LpList[address(0x651Fcc98a348C91FDF087903c25A638a25344dFf)] = true; // TLOS-USDC
+        LpList[address(0xE320E5c4260c7186Fdb0Ea782A3C802736da743F)] = true; // TLOS-DOUGE
+        LpList[address(0x01623ebcBB1109E968e20570d2d41E61cf86F6d0)] = true; // DOUGE-CHARM
+        LpList[address(0xbB4555efb784cD30fC27531EEd82f7BC097D6206)] = true; // CHARM-USDC
+        LpList[address(0x8805F519663E47aBd6adbA4303639f69e51fd112)] = true; // USDC-USDT
+        LpList[address(0xE2dE6566717fF3b1b1e988353E1f63dA0BD9E6f8)] = true; // CHARM-ETH
+        LpList[address(0x63276BDab3443993adc45Eed3C6105B07338D648)] = true; // ELK-TLOS
+        LpList[address(0x72801E883EBF8548D0bF9BcF149DF72D84542448)] = true; // BNB-TLOS
+        LpList[address(0x5b9447EF36abf518cca729bF08E8D72b24a69BDF)] = true; // FTM-TLOS
+        LpList[address(0xb812270599DB74d066578Bd940A95728bFc6988B)] = true; // AVAX-CHARM
+        LpList[address(0x7B90a6355FAc6F0b928aa815335b5Aa42dD2749e)] = true; // MATIC-TLOS
+        LpList[address(0xa6Dc4d4d8fa2c6f8667B096C368e246718982787)] = true; // AVAX-TLOS
+        LpList[address(0x14c5ce09A3a313C78E5a4354F88a97B2414c39e1)] = true; // DMMY-TLOS
+        LpList[address(0xE36aaF76f4d769799C29ebB63f35023239C28B56)] = true; // ONE-TLOS
+        LpList[address(0xC4dC3ce0f4D377DE26b575ED4E2501245d04945f)] = true; // KARMA-CHARM
+        LpList[address(0xa2AB1530F57Ed920027c9D1d66eE9582E6cd7913)] = true; // KARMA-ELK
+        LpList[address(0xf8EB0771d72db674f4FDEe54434080d0bdd0cB41)] = true; // KARMA-DOUGE
+        LpList[address(0x76Bf9208b92C75c94A5723f4a7343C26BB5739B8)] = true; // KARMA-DMMY
+
 
         // Now initialise variables for the timelock and multisig
         require(initialDelegates.length  > minSignatures && initialDelegates.length <= MAX_DELEGATES, " Incompatible number of signatories");
@@ -63,6 +80,10 @@ contract Sensei is Ownable {
                 timelock[Functions.SET].params.poolAllocationPts, 
                 timelock[Functions.SET].params.withUpdateAll);
         clearRequest(Functions.SET);
+    }
+
+    function getZenMasterAddress() public view returns (address) {
+        return address(Zen);
     }
 
 //******************* Combined Timelock & Multisig functionality ************************************************
@@ -153,15 +174,15 @@ contract Sensei is Ownable {
         emit NewRevokeAuthorization(timelock[Functions.REVOKEAUTH].params.delegateAddress);
     }
 
-    function addAdmin() external onlyAdmin notLocked(Functions.ADDADMIN) {        
+    function addAdmin() external onlyOwner notLocked(Functions.ADDADMIN) {        
         isAdmin[timelock[Functions.ADDADMIN].params.delegateAddress] = true;
     }
-    function revokeAdmin() external onlyAdmin notLocked(Functions.REVOKEADMIN) {
+    function revokeAdmin() external onlyOwner notLocked(Functions.REVOKEADMIN) {
         require(timelock[Functions.REVOKEADMIN].params.delegateAddress != msg.sender, "Cannot revoke yourself");
         isAdmin[timelock[Functions.REVOKEADMIN].params.delegateAddress] = false;
     }
 
-    function setDelay(uint delay_) public onlyAdmin notLocked(Functions.SETDELAY) {        
+    function setDelay(uint delay_) public onlyOwner notLocked(Functions.SETDELAY) {        
         require(delay_ >= MINIMUM_DELAY, "Timelock::setDelay: Delay must exceed minimum delay.");
         require(delay_ <= MAXIMUM_DELAY, "Timelock::setDelay: Delay must not exceed maximum delay.");
         delay = delay_;
@@ -183,7 +204,7 @@ contract Sensei is Ownable {
     }
   
     //lock timelock
-    function lockRequest(Functions _fn) public onlyAdmin {
+    function lockRequest(Functions _fn) public onlyOwner {
         clearRequest(_fn);
         emit NewLockRequest(_fn);
     }
